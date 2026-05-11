@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usman Umar | Full-Stack Engineer & Mobile Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-cyan: #06b6d4;
+            --neon-blue: #3b82f6;
+            --neon-purple: #a855f7;
+            --dark-bg: #020617;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-game {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5), 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .neon-border {
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .neon-border:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to bottom, transparent, rgba(6, 182, 212, 0.05), transparent);
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .skill-bar-bg {
+            height: 6px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue));
+            box-shadow: 0 0 10px var(--neon-cyan);
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.1, 0, 0.3, 1);
+        }
+
+        .card-gradient {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 1));
+        }
+
+        /* Hero Glitch Effect */
+        .glitch {
+            position: relative;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+            animation: glitch-anim2 1s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.5deg); }
+            10% { clip: rect(62px, 9999px, 42px, 0); transform: skew(0.2deg); }
+            20% { clip: rect(15px, 9999px, 56px, 0); transform: skew(0.8deg); }
+            30% { clip: rect(80px, 9999px, 12px, 0); transform: skew(0.4deg); }
+            40% { clip: rect(44px, 9999px, 90px, 0); transform: skew(0.1deg); }
+            50% { clip: rect(2px, 9999px, 33px, 0); transform: skew(0.5deg); }
+            60% { clip: rect(67px, 9999px, 88px, 0); transform: skew(0.9deg); }
+            70% { clip: rect(10px, 9999px, 4px, 0); transform: skew(0.2deg); }
+            80% { clip: rect(55px, 9999px, 70px, 0); transform: skew(0.6deg); }
+            90% { clip: rect(23px, 9999px, 98px, 0); transform: skew(0.3deg); }
+            100% { clip: rect(89px, 9999px, 98px, 0); transform: skew(0.5deg); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            100% { clip: rect(10px, 9999px, 30px, 0); }
+        }
+    </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-slate-950 overflow-hidden">
+    <!-- Boot Screen -->
+    <div id="boot-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center font-mono transition-opacity duration-1000">
+        <div class="w-64 space-y-2">
+            <div id="boot-text" class="text-xs text-cyan-500"></div>
+            <div class="w-full bg-slate-900 h-1 rounded-full overflow-hidden">
+                <div id="boot-progress" class="h-full bg-cyan-500 w-0 transition-all duration-300"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scanline"></div>
+    <div class="fixed inset-0 pointer-events-none z-[60] bg-[radial-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_100%),linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_100%,100%_2px,3px_100%]"></div>
+
+    <!-- Background Canvas (Stars/Particles) -->
+    <canvas id="bg-canvas" class="fixed inset-0 -z-10 opacity-30"></canvas>
+
+    <nav class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-lg border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold tracking-tighter text-cyan-400 glow-text">U.UMAR<span class="text-xs ml-1 opacity-50">V3.0</span></a>
+            <div class="hidden md:flex space-x-8 text-sm font-game">
+                <a href="#about" class="hover:text-cyan-400 transition-colors">Bio</a>
+                <a href="#skills" class="hover:text-cyan-400 transition-colors">Stats</a>
+                <a href="#experience" class="hover:text-cyan-400 transition-colors">Quests</a>
+                <a href="#projects" class="hover:text-cyan-400 transition-colors">Inventory</a>
+                <a href="#contact" class="px-4 py-1 border border-cyan-500 rounded hover:bg-cyan-500/20 transition-all shadow-[0_0_10px_rgba(6,182,212,0.5)]">Link Start</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bottom HUD -->
+    <div class="fixed bottom-6 left-6 z-40 hidden lg:block">
+        <div class="bg-slate-900/80 backdrop-blur border border-cyan-500/30 p-4 rounded-lg flex items-center gap-4">
+            <div class="relative w-12 h-12 bg-cyan-500/20 rounded flex items-center justify-center">
+                <i class="fas fa-user-astronaut text-cyan-400 text-xl"></i>
+                <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-cyan-500 font-game leading-none mb-1">SYSTEM STATUS</p>
+                <p id="system-log" class="text-xs text-white font-bold tracking-wider">ONLINE / OPTIMIZED</p>
+                <div class="flex gap-1 mt-1">
+                    <div class="w-2 h-1 bg-cyan-500"></div>
+                    <div class="w-2 h-1 bg-cyan-500"></div>
+                    <div class="w-2 h-1 bg-cyan-500"></div>
+                    <div class="w-2 h-1 bg-slate-700"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-20">
+            <div class="text-center space-y-4">
+                <div class="inline-block px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs rounded-full mb-4 floating">
+                    AVAILABLE FOR REMOTE / ON-SITE
+                </div>
+                <h1 class="text-5xl md:text-8xl font-black mb-2 glow-text glitch" data-text="USMAN UMAR">USMAN UMAR</h1>
+                <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto font-light">
+                    Full-Stack Software Engineer (Web2 & Web3) <span class="text-cyan-500">|</span> Mobile Developer
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <div class="px-4 py-2 bg-slate-900 border border-slate-700 rounded flex items-center gap-2">
+                        <i class="fas fa-map-marker-alt text-cyan-500"></i> Nigeria
+                    </div>
+                    <div class="px-4 py-2 bg-slate-900 border border-slate-700 rounded flex items-center gap-2">
+                        <i class="fas fa-phone text-cyan-500"></i> +234 913 882 6727
+                    </div>
+                    <div class="px-4 py-2 bg-slate-900 border border-slate-700 rounded flex items-center gap-2">
+                        <i class="fas fa-envelope text-cyan-500"></i> uteach38@gmail.com
+                    </div>
+                </div>
+                <div class="mt-12 animate-bounce">
+                    <a href="#about" class="text-cyan-500 opacity-50 hover:opacity-100 transition-opacity">
+                        <i class="fas fa-chevron-down text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bio / Professional Summary -->
+        <section id="about" class="py-24 max-w-5xl mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-12 flex items-center gap-4">
+                <span class="text-cyan-500">01.</span> Character Bio
+                <div class="h-px bg-slate-800 flex-grow"></div>
+            </h2>
+            <div class="grid md:grid-cols-3 gap-12 items-start">
+                <div class="md:col-span-2 space-y-6 text-lg text-slate-300 leading-relaxed">
+                    <p>
+                        Full-Stack Software Engineer with experience building modern web applications, mobile applications, and Web3 solutions.
+                        Skilled in developing scalable and responsive systems using <span class="text-cyan-400">React, Next.js, Laravel, and React Native</span>.
+                    </p>
+                    <p>
+                        Experienced in API integration, frontend development, backend logic, and cross-platform mobile applications.
+                        Also familiar with blockchain development and smart contract concepts.
+                    </p>
+                    <p>
+                        Focused on delivering efficient, user-friendly, and scalable software solutions for web and mobile platforms.
+                    </p>
+                </div>
+                <div class="space-y-6">
+                    <div class="p-6 card-gradient neon-border rounded-xl">
+                        <h3 class="text-sm font-game text-cyan-400 mb-4">Quick Stats</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span>LVL:</span> <span class="text-white">2025</span></div>
+                            <div class="flex justify-between"><span>CLASS:</span> <span class="text-white">Full-Stack</span></div>
+                            <div class="flex justify-between"><span>EXP:</span> <span class="text-white">4+ Years</span></div>
+                            <div class="flex justify-between"><span>MP:</span> <span class="text-white">Web3/Mobile</span></div>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-slate-800">
+                            <a href="https://github.com/0x-Mrcoder" target="_blank" class="flex items-center gap-2 hover:text-cyan-400 transition">
+                                <i class="fab fa-github"></i> github.com/0x-Mrcoder
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats / Skills -->
+        <section id="skills" class="py-24 bg-slate-900/30">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-3xl font-bold mb-16 flex items-center gap-4">
+                    <span class="text-cyan-500">02.</span> Technical Stats
+                    <div class="h-px bg-slate-800 flex-grow"></div>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+                    <!-- Full-Stack -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-cyan-500 flex items-center gap-2">
+                            <i class="fas fa-layer-group"></i> Full-Stack
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>Laravel (PHP)</span><span>90%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%"></div></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>Node.js / Express</span><span>85%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85%"></div></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>REST APIs</span><span>95%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="95%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frontend -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-cyan-500 flex items-center gap-2">
+                            <i class="fas fa-code"></i> Frontend
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>React / Next.js</span><span>92%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="92%"></div></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>TailwindCSS</span><span>98%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="98%"></div></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>JavaScript (ES6+)</span><span>90%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Web3 & Mobile -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-cyan-500 flex items-center gap-2">
+                            <i class="fas fa-mobile-alt"></i> Mobile & Web3
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>React Native</span><span>88%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88%"></div></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>Solidity (Foundry)</span><span>75%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75%"></div></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm"><span>Smart Contracts</span><span>80%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-16 flex flex-wrap gap-4 justify-center">
+                    <span class="px-4 py-1 bg-slate-800 rounded-full text-xs text-slate-400 border border-slate-700">MySQL</span>
+                    <span class="px-4 py-1 bg-slate-800 rounded-full text-xs text-slate-400 border border-slate-700">PostgreSQL</span>
+                    <span class="px-4 py-1 bg-slate-800 rounded-full text-xs text-slate-400 border border-slate-700">MongoDB</span>
+                    <span class="px-4 py-1 bg-slate-800 rounded-full text-xs text-slate-400 border border-slate-700">Python (Flask)</span>
+                    <span class="px-4 py-1 bg-slate-800 rounded-full text-xs text-slate-400 border border-slate-700">Vercel</span>
+                    <span class="px-4 py-1 bg-slate-800 rounded-full text-xs text-slate-400 border border-slate-700">Git & GitHub</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quests / Experience -->
+        <section id="experience" class="py-24 max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-16 flex items-center gap-4">
+                <span class="text-cyan-500">03.</span> Quest History
+                <div class="h-px bg-slate-800 flex-grow"></div>
+            </h2>
+
+            <div class="space-y-12 relative before:absolute before:left-[17px] before:top-2 before:bottom-0 before:w-px before:bg-slate-800 md:before:left-1/2">
+
+                <!-- Experience Item -->
+                <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-24">
+                    <div class="md:text-right">
+                        <div class="absolute left-0 top-1.5 w-9 h-9 bg-slate-950 border-2 border-cyan-500 rounded-full flex items-center justify-center z-10 md:left-1/2 md:-ml-[18px]">
+                            <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Fullstack Developer</h3>
+                        <p class="text-cyan-500 font-game text-xs mb-2">Pioneers ICT | 2025 – Present</p>
+                    </div>
+                    <div class="text-slate-400 mt-2 md:mt-0">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Led development of web-based projects</li>
+                            <li>Coordinated technical execution and delivery</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-24">
+                    <div class="hidden md:block">
+                        <ul class="list-disc list-outside space-y-1 text-slate-400 text-right pr-4">
+                            <li>Built responsive UI components for identity verification</li>
+                            <li>Integrated APIs for secure data handling</li>
+                        </ul>
+                    </div>
+                    <div class="md:text-left">
+                        <div class="absolute left-0 top-1.5 w-9 h-9 bg-slate-950 border-2 border-slate-700 rounded-full flex items-center justify-center z-10 md:left-1/2 md:-ml-[18px]">
+                            <div class="w-2 h-2 bg-slate-700 rounded-full"></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Frontend Developer</h3>
+                        <p class="text-cyan-500 font-game text-xs mb-2">NINSlip.com | 2025 – Present</p>
+                        <div class="md:hidden text-slate-400 mt-2">
+                             <ul class="list-disc list-inside space-y-1">
+                                <li>Built responsive UI components for identity verification</li>
+                                <li>Integrated APIs for secure data handling</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- founder -->
+                <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-24">
+                    <div class="md:text-right">
+                        <div class="absolute left-0 top-1.5 w-9 h-9 bg-slate-950 border-2 border-cyan-500 rounded-full flex items-center justify-center z-10 md:left-1/2 md:-ml-[18px]">
+                            <div class="w-2 h-2 bg-cyan-500 rounded-full shadow-[0_0_10px_#06b6d4]"></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Founder & Developer</h3>
+                        <p class="text-cyan-500 font-game text-xs mb-2">BorderChain.org | 2024</p>
+                    </div>
+                    <div class="text-slate-400 mt-2 md:mt-0">
+                        <p>Designed blockchain system concepts and architecture. Developed token structure and Web3 ideas.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-24">
+                    <div class="hidden md:block text-slate-400 text-right pr-4">
+                        <p>Developed fintech user interfaces for payment systems. Integrated backend APIs for financial operations.</p>
+                    </div>
+                    <div class="md:text-left">
+                        <div class="absolute left-0 top-1.5 w-9 h-9 bg-slate-950 border-2 border-slate-700 rounded-full flex items-center justify-center z-10 md:left-1/2 md:-ml-[18px]">
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Frontend Developer</h3>
+                        <p class="text-cyan-500 font-game text-xs mb-2">Payrant.com | 2021 – Present</p>
+                        <div class="md:hidden text-slate-400 mt-2">
+                            <p>Developed fintech user interfaces for payment systems. Integrated backend APIs for financial operations.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-24">
+                    <div class="md:text-right">
+                        <div class="absolute left-0 top-1.5 w-9 h-9 bg-slate-950 border-2 border-slate-700 rounded-full flex items-center justify-center z-10 md:left-1/2 md:-ml-[18px]">
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Fullstack Developer</h3>
+                        <p class="text-cyan-500 font-game text-xs mb-2">CyberHausa | 2022 – Present</p>
+                    </div>
+                    <div class="text-slate-400 mt-2 md:mt-0">
+                        <p>Managed IT operations and system improvements. Oversaw digital infrastructure and support systems.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-24">
+                    <div class="hidden md:block text-slate-400 text-right pr-4">
+                        <p>Provided IT support and system maintenance. Assisted in technical operations and troubleshooting.</p>
+                    </div>
+                    <div class="md:text-left">
+                        <div class="absolute left-0 top-1.5 w-9 h-9 bg-slate-950 border-2 border-slate-700 rounded-full flex items-center justify-center z-10 md:left-1/2 md:-ml-[18px]">
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Technical Staff Specialist</h3>
+                        <p class="text-cyan-500 font-game text-xs mb-2">CHPBRN | 2024 – Present</p>
+                        <div class="md:hidden text-slate-400 mt-2">
+                            <p>Provided IT support and system maintenance. Assisted in technical operations and troubleshooting.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-24">
+                    <div class="md:text-right">
+                        <div class="absolute left-0 top-1.5 w-9 h-9 bg-slate-950 border-2 border-slate-700 rounded-full flex items-center justify-center z-10 md:left-1/2 md:-ml-[18px]">
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Frontend Developer</h3>
+                        <p class="text-cyan-500 font-game text-xs mb-2">Calkia.com | 2023</p>
+                    </div>
+                    <div class="text-slate-400 mt-2 md:mt-0">
+                        <p>Developed responsive e-commerce interface using React. Improved UI/UX and user engagement.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="p-6 bg-slate-900/50 border border-slate-800 rounded-xl">
+                    <h3 class="font-game text-cyan-400 mb-4 flex items-center gap-2">
+                        <i class="fas fa-graduation-cap"></i> Education / Level Up
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-white font-bold">Advanced Diploma in Network & Computer Security</p>
+                            <p class="text-sm text-slate-400">Informatics Academy, Kazaure | 2023</p>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">Diploma in Information Technology</p>
+                            <p class="text-sm text-slate-400">Informatics Academy, Kazaure | 2022</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-900/50 border border-slate-800 rounded-xl">
+                    <h3 class="font-game text-cyan-400 mb-4 flex items-center gap-2">
+                        <i class="fas fa-language"></i> Communication
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span>Hausa</span>
+                            <span class="text-cyan-500">Native</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>English</span>
+                            <span class="text-cyan-500">Fluent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inventory / Projects -->
+        <section id="projects" class="py-24 bg-slate-900/20">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-3xl font-bold mb-16 flex items-center gap-4">
+                    <span class="text-cyan-500">04.</span> Inventory
+                    <div class="h-px bg-slate-800 flex-grow"></div>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Card -->
+                    <div class="group p-1 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 neon-border hover:from-cyan-900/20">
+                        <div class="p-6 h-full bg-slate-950 rounded-[14px]">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="text-cyan-500 text-2xl group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="text-[8px] font-game px-2 py-1 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded">FINTECH</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white">Payrant Fintech</h3>
+                            <p class="text-sm text-slate-400 mb-4">Developed payment system UI with API integration for secure transactions and optimized financial operations.</p>
+                            <div class="flex flex-wrap gap-2 mt-auto">
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">React</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">Next.js</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">REST API</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group p-1 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 neon-border hover:from-cyan-900/20">
+                        <div class="p-6 h-full bg-slate-950 rounded-[14px]">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="text-cyan-500 text-2xl group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-hospital"></i>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="text-[8px] font-game px-2 py-1 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded">FULL-STACK</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white">Hospital Management</h3>
+                            <p class="text-sm text-slate-400 mb-4">Built a full-stack hospital management system with patient records and administrative modules.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">Laravel</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">MySQL</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">PHP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group p-1 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 neon-border hover:from-cyan-900/20">
+                        <div class="p-6 h-full bg-slate-950 rounded-[14px]">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="text-cyan-500 text-2xl group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="text-[8px] font-game px-2 py-1 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded">WEB3</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white">BorderChain.org</h3>
+                            <p class="text-sm text-slate-400 mb-4">Blockchain-based systems and smart contract concepts for decentralized apps and digital agreements.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">Solidity</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">Foundry</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">Web3.js</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group p-1 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 neon-border hover:from-cyan-900/20">
+                        <div class="p-6 h-full bg-slate-950 rounded-[14px]">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="text-cyan-500 text-2xl group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="text-[8px] font-game px-2 py-1 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded">MOBILE</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white">myconnecta.ng</h3>
+                            <p class="text-sm text-slate-400 mb-4">Cross-platform mobile application for user communication and service interaction features.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">React Native</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">JavaScript</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group p-1 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 neon-border hover:from-cyan-900/20">
+                        <div class="p-6 h-full bg-slate-950 rounded-[14px]">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="text-cyan-500 text-2xl group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="text-[8px] font-game px-2 py-1 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded">MOBILE</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white">ibdata VTU</h3>
+                            <p class="text-sm text-slate-400 mb-4">Mobile application for airtime and data transactions with real-time API integration.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">React Native</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">API Integration</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group p-1 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 neon-border hover:from-cyan-900/20">
+                        <div class="p-6 h-full bg-slate-950 rounded-[14px]">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="text-cyan-500 text-2xl group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-terminal"></i>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="text-[8px] font-game px-2 py-1 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded">FINTECH</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-white">VTStack.ng</h3>
+                            <p class="text-sm text-slate-400 mb-4">Fintech payment gateway platform focused on digital transactions and infrastructure.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">Gateway</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-slate-800 border border-slate-700 rounded">Payments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-8 glow-text">READY TO START?</h2>
+            <p class="text-slate-400 mb-12 max-w-xl mx-auto">
+                Whether you have a quest for me or just want to chat about the future of Web3, my inbox is always open.
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                <a href="mailto:uteach38@gmail.com" class="w-full md:w-auto px-8 py-4 bg-cyan-500 text-slate-950 font-bold rounded-lg hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] transition-all flex items-center justify-center gap-3">
+                    <i class="fas fa-paper-plane"></i> SEND MESSAGE
+                </a>
+                <a href="https://github.com/0x-Mrcoder" target="_blank" class="w-full md:w-auto px-8 py-4 border border-slate-700 hover:border-cyan-500 rounded-lg transition-all flex items-center justify-center gap-3">
+                    <i class="fab fa-github"></i> VIEW REPOS
+                </a>
+            </div>
+
+            <div class="mt-16 flex justify-center gap-8 text-slate-500">
+                <span class="flex items-center gap-2"><i class="fas fa-terminal text-cyan-500/50"></i> Remote</span>
+                <span class="flex items-center gap-2"><i class="fas fa-terminal text-cyan-500/50"></i> Freelance</span>
+                <span class="flex items-center gap-2"><i class="fas fa-terminal text-cyan-500/50"></i> Full-Time</span>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-12 border-t border-slate-900 text-center text-slate-600 text-xs tracking-widest font-game">
+        <p>&copy; 2025 USMAN UMAR. ALL RIGHTS RESERVED. DESIGNED FOR THE NEXT GEN.</p>
+    </footer>
+
+    <script>
+        // Boot Sequence
+        const bootText = document.getElementById('boot-text');
+        const bootProgress = document.getElementById('boot-progress');
+        const bootScreen = document.getElementById('boot-screen');
+        const messages = [
+            "> INITIALIZING SYSTEM...",
+            "> LOADING CORE MODULES...",
+            "> ESTABLISHING NEURAL LINK...",
+            "> DECRYPTING DATA...",
+            "> WELCOME, USER."
+        ];
+
+        let msgIndex = 0;
+        function updateBoot() {
+            if (msgIndex < messages.length) {
+                bootText.innerHTML += messages[msgIndex] + "<br>";
+                msgIndex++;
+                bootProgress.style.width = (msgIndex / messages.length) * 100 + "%";
+                setTimeout(updateBoot, 400);
+            } else {
+                setTimeout(() => {
+                    bootScreen.style.opacity = '0';
+                    document.body.classList.remove('overflow-hidden');
+                    setTimeout(() => bootScreen.style.display = 'none', 1000);
+                }, 500);
+            }
+        }
+        window.addEventListener('load', updateBoot);
+
+        // Starfield Background
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5 + 0.1
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.5)';
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                p.y -= p.speed;
+                if (p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        animate();
+
+        // Reveal on Scroll with Skill Bar animation
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+
+                    // Trigger skill bar animations if in view
+                    if (entry.target.id === 'skills') {
+                        entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                            bar.style.width = bar.getAttribute('data-width');
+                        });
+                    }
+
+                    // System HUD feedback
+                    const log = document.getElementById('system-log');
+                    if (log) {
+                        const sectionName = entry.target.id.toUpperCase();
+                        log.innerText = `Entering ${sectionName} AREA...`;
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
